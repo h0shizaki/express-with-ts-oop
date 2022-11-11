@@ -14,11 +14,23 @@ class Server {
         this.express = this.app.express;
     }
 
-    public startServer() {
+    public async startServer() {
+        await this.pingDatabase();
         const port: number = this.config.getPort() ;
         this.express.listen(port, () => {
             console.log(`Server is running on port ${port}!`)
         })
+    }
+
+    public async pingDatabase() {
+        const db = this.config.getDatabase() ;
+        const pool = db.getPool() ;
+
+        const res = await pool.query('SELECT NOW()')
+        await pool.end()
+
+        console.log(`Connect to database success ${res.rows[0]['now']}`)
+        
     }
     
 }
