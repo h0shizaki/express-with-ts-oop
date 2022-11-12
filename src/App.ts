@@ -3,12 +3,13 @@ import VideoController from './controller/VideoController';
 
 class App {
     public express: Application ;
-
+ 
     constructor() {
         this.express = express() ;
-        this.loadRoutes() ;
         this.express.use(express.urlencoded({extended:false}));
         this.express.use(express.json());
+
+        this.loadRoutes() ;
     }
 
     private loadRoutes() {

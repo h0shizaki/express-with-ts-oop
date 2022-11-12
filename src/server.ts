@@ -1,6 +1,7 @@
 import { Application } from 'express';
 import App from './App';
 import Config from './config/Config';
+import DB from './config/DB';
 
 class Server {
     private app : App ;
@@ -23,11 +24,11 @@ class Server {
     }
 
     public async pingDatabase() {
-        const db = this.config.getDatabase() ;
+        const db = DB ;
         const pool = db.getPool() ;
-
-        const res = await pool.query('SELECT NOW()')
-        await pool.end()
+        const client = await pool.connect() ;
+        const res = await client.query('SELECT NOW()')
+        client.release();
 
         console.log(`Connect to database success ${res.rows[0]['now']}`)
         

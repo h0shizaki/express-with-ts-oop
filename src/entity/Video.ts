@@ -1,9 +1,9 @@
-interface Video {
+export interface Video extends VideoBody {
     id: number;
-    title: string ;
-    duration: number;
-    url: string ;
-
 }
 
-export default Video ;
+export interface VideoBody {
+    title: string ;
+    duration: number;
+    url_id: string ;
+}

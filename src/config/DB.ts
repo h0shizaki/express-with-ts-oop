@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-
+import "dotenv/config"
 class Database {
     private user: string ;
     private host: string ;
@@ -10,6 +10,7 @@ class Database {
     private pool : Pool ;
 
     constructor() {
+
         this.user = process.env.PGUSER || 'postgres' ;
         this.host = process.env.PGHOST || 'localhost' ;
         this.password = process.env.PGPASSWORD || '' ;
@@ -31,4 +32,4 @@ class Database {
 
 }
 
-export default Database ;
+export default new Database() ;
