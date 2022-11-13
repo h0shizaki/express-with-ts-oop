@@ -1,5 +1,6 @@
 import express, {Application ,Request , Response } from 'express';
 import VideoController from './controller/VideoController';
+import { logger } from './middleware/logging';
 
 class App {
     public express: Application ;
@@ -14,12 +15,16 @@ class App {
 
     private loadRoutes() {
         const router = express.Router() ;
-        router.get('/' , (req: Request , res: Response) => {
-            res.send("Hello World");
+        router.get('/' , logger, (req: Request , res: Response) => {
+            return res.send("Hello World");
         })
         
         const videoController : VideoController = new VideoController() ;
-        router.use('/video', videoController.getRouter());
+        router.use('/api', logger, videoController.getRouter());
+
+        router.use('*', logger , (req: Request , res : Response) => {
+            return res.status(404).send('404 not found');
+        })
 
         this.express.use(router);
     }

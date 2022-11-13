@@ -1,6 +1,7 @@
 import express , { Router,Request,Response } from "express";
 import { VideoBody } from "../entity/Video";
 import VideoServiceImpl from "../services/VideoServiceImpl";
+import { writeErrorJson, writeResponseJson } from "../util";
 
 class VideoController {
     private router : Router ;
@@ -14,18 +15,21 @@ class VideoController {
 
         this.router.get('/videos' , async (req : Request , res : Response ) => {
             let result = await VideoServiceImpl.getVideos() ;
-            res.status(200).send(result)
+
+            writeResponseJson(res, "Data found!", result, 200);
+            return ;
         })
 
         this.router.post('/video',async (req : Request , res : Response ) => {
             if (!req.body) {
-                return res.status(400).json("Error body is empty");
+                return writeErrorJson(res, "Please provide the data", 400 );
             }
 
             let {title , duration , url_id} = req.body ;
 
             if (!title || !duration || !url_id) {
-                return res.status(400).json("Bad request");
+                // return res.status(400).json("Bad request");
+                return writeErrorJson(res, "Please provide the data", 400 );
             }
 
             const vdo: VideoBody = {
@@ -37,21 +41,23 @@ class VideoController {
             const result = await VideoServiceImpl.addVideo(vdo);
 
             if(result === 1){
-                return res.send( {
-                    "header": {
-                        "status": "ok",
-                        "code": 200
-                    },
-                    "body": {
-                        "message" : "Insert success",
-                        "data":vdo
-                    }
-                });
+                writeResponseJson(res, "Insert success", vdo, 200);
+                return ;
             }
-
-            return res.send(500);
+            
+            writeErrorJson(res,"Something went wrong");
+            return ;
             
         })
+
+        this.router.put('/video' , async function (req : Request , res : Response) {
+            return writeErrorJson(res, "Not done yet", 403 );
+        })
+
+        this.router.delete('/video/:id' , async (req : Request , res : Response) => {
+            return res.send(200);
+        })
+
     }
 
     public getRouter() : Router {
