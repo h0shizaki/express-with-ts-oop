@@ -9,6 +9,7 @@ class App {
         this.express = express() ;
         this.express.use(express.urlencoded({extended:false}));
         this.express.use(express.json());
+        this.express.enable("trust proxy");
 
         this.loadRoutes() ;
     }
@@ -16,7 +17,7 @@ class App {
     private loadRoutes() {
         const router = express.Router() ;
         router.get('/' , logger, (req: Request , res: Response) => {
-            return res.send("Hello World");
+            return res.send(`${process.env.NODE_ENV}`);
         })
         
         const videoController : VideoController = new VideoController() ;
