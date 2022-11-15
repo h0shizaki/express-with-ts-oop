@@ -6,17 +6,18 @@ class VideoServiceImpl implements VideoService {
     async getVideos(): Promise<Video[]> {
         return await VideoDaoImpl.getVideos() ;
     }
-    findById(id: number): Promise<Video | null> {
-        throw new Error("Method not implemented.");
+    async findById(id: number): Promise<Video | null> {
+        return await VideoDaoImpl.findById(id);
     }
-    addVideo(vdo: VideoBody): Promise<number | null> {
-        return VideoDaoImpl.addVideo(vdo) ;
+    async addVideo(vdo: VideoBody): Promise<number | null> {
+        return await VideoDaoImpl.addVideo(vdo) ;
         // throw new Error("Method not implemented.");
     }
-    deleteVideo(id: number): Promise<number | null> {
-        throw new Error("Method not implemented.");
+    async deleteVideo(id: number): Promise<number | null> {
+        // throw new Error("Method not implemented.");
+        return await VideoDaoImpl.deleteVideo(id);
     }
-    updateVideo(vdo: Video): Promise<Video> {
+    async updateVideo(vdo: Video): Promise<Video> {
         throw new Error("Method not implemented.");
     }
 }

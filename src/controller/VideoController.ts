@@ -16,8 +16,19 @@ class VideoController {
         this.router.get('/videos' , async (req : Request , res : Response ) => {
             let result = await VideoServiceImpl.getVideos() ;
 
-            writeResponseJson(res, "Data found!", result, 200);
+            writeResponseJson(res, "Data found!", {"count":result.length , "videos": result}, 200);
             return ;
+        })
+
+        this.router.get('/video/:id(\\d+)' ,async (req : Request , res : Response) => {
+            const id: number = parseInt(req.params.id) ;
+            const result = await VideoServiceImpl.findById(id);
+
+            if(result === null){
+                return writeResponseJson(res, "Data not found", "",200);
+            }else{
+                return writeResponseJson(res, "Data found!", result, 200);
+            }
         })
 
         this.router.post('/video',async (req : Request , res : Response ) => {
@@ -54,8 +65,17 @@ class VideoController {
             return writeErrorJson(res, "Not done yet", 403 );
         })
 
-        this.router.delete('/video/:id' , async (req : Request , res : Response) => {
-            return res.send(200);
+        this.router.delete('/video/:id(\\d+)' , async (req : Request , res : Response) => {
+            const id: number = parseInt(req.params.id) ;
+            const result = await VideoServiceImpl.deleteVideo(id);
+
+            if(result === 1){
+                return writeResponseJson(res, "Delete success", {"delete_id":id}, 200);
+            }else if(result === null){
+                return writeResponseJson(res, "No row affected", "",200);
+            }else{
+                return writeErrorJson(res,"Something went wrong"); 
+            }
         })
 
     }

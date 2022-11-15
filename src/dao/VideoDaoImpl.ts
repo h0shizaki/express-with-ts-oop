@@ -35,14 +35,38 @@ class VideoDaoImpl implements VideoDao {
         }
         return videos ;
     }
-    findById(id: number): Promise<Video | null> {
-        throw new Error("Method not implemented.");
+    async findById(id: number): Promise<Video | null> {
+        try{
+            const client = await pool.connect() ;
+            const statement = "SELECT * FROM video WHERE video.id = $1";
+            const result = await client.query(statement,[id]);
+            const count: number = result.rowCount;
+            
+            client.release();
+            if(count == 0) {
+                return null ;
+            }else{
+                const raw_data = result.rows[0];
+                let data : Video = {
+                    id: raw_data.id,
+                    title : raw_data.title ,
+                    duration : raw_data.duration ,
+                    url_id: raw_data.url_id
+                }
+                return data ;
+            }
+
+        }catch(err){
+            console.error(err);
+            throw err;
+        }
     }
+
     async addVideo(vdo: VideoBody): Promise<number | null >  {
         try{
             const client = await pool.connect() ;
             const query = "INSERT INTO video(title,duration,url_id) VALUES($1,$2,$3)";
-            const result = await client.query(query,[vdo.title , vdo.duration , vdo.url_id] ) ;
+            await client.query(query,[vdo.title , vdo.duration , vdo.url_id] ) ;
             client.release();
             return 1 ;
         }catch(err){
@@ -52,9 +76,29 @@ class VideoDaoImpl implements VideoDao {
         
     }
 
-    deleteVideo(id: number): Promise<number | null> {
-        throw new Error("Method not implemented.");
+    async deleteVideo(id: number): Promise<number | null> {
+        try{
+            const client = await pool.connect() ;
+
+            //check data inside db
+            const statement = "SELECT COUNT(id) FROM video WHERE video.id = $1";
+            const result = await client.query(statement,[id]);
+            const count: number = result.rows[0]['count'];
+
+            if(count == 0) {
+                return null ;
+            }
+
+            const query = "DELETE FROM video WHERE video.id = $1 ;" ;
+            await client.query(query, [id]);
+            client.release();
+            return 1 ;
+        }catch(err){
+            console.error(err);
+            return 0 ;
+        }
     }
+
     updateVideo(vdo: Video): Promise<Video> {
         throw new Error("Method not implemented.");
     }
