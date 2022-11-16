@@ -20,6 +20,7 @@ services:
       PGPASSWORD: 4321
       PGDATABASE: mydb
       PGPORT: 5432
+    command: npm run dev
 
   pg-db :
     environment:
