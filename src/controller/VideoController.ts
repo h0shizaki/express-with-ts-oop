@@ -1,5 +1,5 @@
 import express , { Router,Request,Response } from "express";
-import { VideoBody } from "../entity/Video";
+import { Video, VideoBody } from "../entity/Video";
 import VideoServiceImpl from "../services/VideoServiceImpl";
 import { writeErrorJson, writeResponseJson } from "../util";
 
@@ -62,7 +62,23 @@ class VideoController {
         })
 
         this.router.put('/video' , async function (req : Request , res : Response) {
-            return writeErrorJson(res, "Not done yet", 403 );
+            let {id,title , duration , url_id} = req.body ;
+            const vdo: Video = {
+                id,
+                title,
+                url_id,
+                duration
+            }
+            try{
+                const result = await VideoServiceImpl.updateVideo(vdo);
+                if(result === null){
+                    return writeResponseJson(res, "No row affect", "", 200);
+                }
+                return writeResponseJson(res, "Update success", result, 200);
+            }catch(err){
+                writeErrorJson(res,"Something went wrong");
+                return ;
+            }
         })
 
         this.router.delete('/video/:id(\\d+)' , async (req : Request , res : Response) => {

@@ -99,8 +99,22 @@ class VideoDaoImpl implements VideoDao {
         }
     }
 
-    updateVideo(vdo: Video): Promise<Video> {
-        throw new Error("Method not implemented.");
+    async updateVideo(vdo: Video): Promise<Video | null> {
+        try{
+            const client = await pool.connect() ;
+            const statement = "UPDATE video SET title = $1, duration = $2, url_id = $3 WHERE id = $4;";
+            const result = await client.query(statement , [vdo.title , vdo.duration , vdo.url_id , vdo.id]);
+            // console.log(result);
+
+            client.release();
+            if(result.rowCount == 0){
+                return null ;
+            }else{
+                return vdo ;
+            }
+        }catch(err){
+            throw err ;
+        }
     }
 }
 

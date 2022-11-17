@@ -5,7 +5,7 @@ interface VideoDao {
     findById(id: number) : Promise<Video | null>;
     addVideo(vdo : VideoBody) : Promise<number | null> ;
     deleteVideo(id: number) : Promise<number|null> ;
-    updateVideo(vdo : Video) : Promise<Video>;
+    updateVideo(vdo : Video) : Promise<Video| null>;
 }
 
 export default VideoDao ;

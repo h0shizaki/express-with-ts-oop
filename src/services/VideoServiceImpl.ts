@@ -17,8 +17,8 @@ class VideoServiceImpl implements VideoService {
         // throw new Error("Method not implemented.");
         return await VideoDaoImpl.deleteVideo(id);
     }
-    async updateVideo(vdo: Video): Promise<Video> {
-        throw new Error("Method not implemented.");
+    async updateVideo(vdo: Video): Promise<Video|null> {
+        return await VideoDaoImpl.updateVideo(vdo);
     }
 }
 
