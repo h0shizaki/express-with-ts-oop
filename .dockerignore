@@ -2,5 +2,6 @@
 /dist
 .git
 .gitignore
+.env
 README.md
 package-lock.json
