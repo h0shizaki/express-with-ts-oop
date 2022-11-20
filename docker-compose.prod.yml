@@ -13,4 +13,16 @@ services:
         NODE_ENV: production
     environment :
       NODE_ENV: production
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: ${PGDATABASE}
+      PGPORT: 5432
+      APIKey: ${APIKey}
+
     command: npm run start:prod
+
+  pg-db :
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
